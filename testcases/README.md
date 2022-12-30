@@ -2,17 +2,17 @@
 
 ## Input
 
-In the first line, three integers **𝑛** , **𝑚** and **𝑙** are given separated by space characters.
+In the first line, three integers **𝑚** , **𝑛** and **𝑙** are given separated by space characters.
 
-In the following lines, the **𝑛×𝑚**  matrix **𝐴** and the **𝑚×𝑙** matrix **𝐵** are given. All the numbers are integers.
+In the following lines, the **𝑚×𝑛**  matrix **𝐴** and the **𝑛×𝑙** matrix **𝐵** are given. All the numbers are integers.
 
 ## Output
 
-Print elements of the **𝑛×𝑙** matrix **𝐶 (𝑐𝑖𝑗)**. Print a single space character after “each” element!
+Print elements of the **𝑚×𝑙** matrix **𝐶 (𝑐𝑖𝑗)**. Print a single space character after “each” element!
 
 ## Constraints
 
-1. 1 ≤ 𝑛, 𝑚, 𝑙 ≤ 10000
+1. 1 ≤ 𝑚, 𝑛, 𝑙 ≤ 10000
 2. 0 ≤ 𝑎𝑖𝑗, 𝑏𝑖𝑗 ≤ 100
 
 ## Sample Input
