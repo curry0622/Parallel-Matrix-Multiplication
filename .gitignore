@@ -6,3 +6,4 @@ src/hybrid/mm_hybrid
 src/1gpu/mm_1gpu
 src/2gpus/mm_2gpus
 src/*.o
+.vscode/
