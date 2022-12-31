@@ -9,7 +9,7 @@ def parse_args():
     return parser.parse_args()
 
 def print_info(args):
-    print(f"Test case: {args.m}_{args.n}_{args.l}.in")
+    print(f"Test case: {args.m * args.l}.in")
     print(f"Dim of A: {args.m}x{args.n}")
     print(f"Dim of B: {args.n}x{args.l}")
 
@@ -18,7 +18,7 @@ def gen_random_mtx(m, n):
 
 def output(args, A, B):
     # Output m, n, l
-    fout = open(f"../testcases/{args.m}_{args.n}_{args.l}.in", "w")
+    fout = open(f"../testcases/{args.m * args.l}.in", "w")
     fout.write(f"{args.m} {args.n} {args.l}\n")
 
     # Output mtx A
