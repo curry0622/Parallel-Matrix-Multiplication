@@ -2,7 +2,7 @@
 
 ## How to Compile
 
-First, enter the directory representing that parallel type.
+First, enter the directory representing that parallel implementation.
 
 Second, type in `make`.
 

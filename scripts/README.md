@@ -10,7 +10,7 @@ The output content will be stored in **[P]/[M*L].in**. **[P]** has a default val
 python3 gen.py -m [M] -n [N] -l [L] [Optional: -p [P]]
 ```
 
-Use below command to see each parameter's info.
+Use the following command to see each parameter's info.
 
 ```shell
 python3 gen.py -h
@@ -22,7 +22,7 @@ python3 gen.py -h
 python3 gen.py -m 5 -n 4 -l 3 -p ../testcases
 ```
 
-In [../testcases/15.in](../testcases/), you will see something like below:
+In [../testcases/15.in](../testcases/), you will see something like:
 
 ```txt
 5 4 3
@@ -47,7 +47,7 @@ The default value of **[D]** is 0. Set **[D]** to 1 if you want to see more debu
 python3 verify.py -f1 [F1] -f2 [F2] [Optional: -d [D]]
 ```
 
-Use below command to see each parameter's info.
+Use the following command to see each parameter's info.
 
 ```shell
 python3 verify.py -h
