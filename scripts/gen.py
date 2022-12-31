@@ -2,7 +2,6 @@ import argparse
 import random
 
 def parse_args():
-    # e.g. python3 gen.py -m 5 -n 5 -l 5
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", default=5, type=int, help="# rows of matrix A")
     parser.add_argument("-n", default=5, type=int, help="# columns of matrix A")

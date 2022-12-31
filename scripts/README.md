@@ -10,7 +10,13 @@ The output content will be stored in [testcases/M_N_L.in](../testcases/).
 python3 gen.py -m [M] -n [N] -l [L]
 ```
 
-e.g.
+Use below command to see each parameter's info.
+
+```shell
+python3 gen.py -h
+```
+
+**Sample execution:**
 
 ```shell
 python3 gen.py -m 5 -n 4 -l 3
@@ -30,3 +36,29 @@ In [testcases/5_4_3.in](../testcases/), you will see below content:
 22 27 89 
 2 92 75 
 ```
+
+## Verify Results
+
+It will check whether file_1 [F1] is the same as file_2 [F2] or not.
+
+The default value of [D] if 0. Set [D] to 1 if you want to see more debug messages.
+
+```shell
+python3 verify.py -f1 [F1] -f2 [F2] -d [D]
+```
+
+Use below command to see each parameter's info.
+
+```shell
+python3 verify.py -h
+```
+
+**Sample execution:**
+
+```shell
+python3 verify.py -f1 testcase.out -f2 yours.out -d 1
+```
+
+It will output "Correct!" if two files are exactly the same.
+
+Otherwise, output "Wrong!" and some debug messages.
