@@ -2,9 +2,9 @@
 
 ## Generate Test Cases
 
-It will randomly generate matrix A with dimension MxN and matrix B with dimension NxL.
+It will randomly generate matrix A with dimension **[M]x[N]** and matrix B with dimension **[N]x[L]**.
 
-The output content will be stored in **[P]/[M*L].in**. [P] has a default value, which is current directory.
+The output content will be stored in **[P]/[M*L].in**. **[P]** has a default value, which is the path of the current directory.
 
 ```shell
 python3 gen.py -m [M] -n [N] -l [L] [Optional: -p [P]]
@@ -22,7 +22,7 @@ python3 gen.py -h
 python3 gen.py -m 5 -n 4 -l 3 -p ../testcases
 ```
 
-In [../testcases/15.in](../testcases/), you will see below content:
+In [../testcases/15.in](../testcases/), you will see something like below:
 
 ```txt
 5 4 3
@@ -39,9 +39,9 @@ In [../testcases/15.in](../testcases/), you will see below content:
 
 ## Verify Results
 
-It will check whether file_1 [F1] is the same as file_2 [F2] or not.
+It will check whether file_1 **[F1]** is the same as file_2 **[F2]** or not.
 
-The default value of [D] is 0. Set [D] to 1 if you want to see more debug messages.
+The default value of **[D]** is 0. Set **[D]** to 1 if you want to see more debug messages.
 
 ```shell
 python3 verify.py -f1 [F1] -f2 [F2] [Optional: -d [D]]
@@ -61,4 +61,4 @@ python3 verify.py -f1 testcase.out -f2 yours.out -d 1
 
 It will output "Correct!" if two files are exactly the same.
 
-Otherwise, output "Wrong!" and some debug messages.
+Otherwise, it will output "Wrong!" and some debug messages.
