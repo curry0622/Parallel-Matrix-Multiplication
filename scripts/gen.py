@@ -6,10 +6,11 @@ def parse_args():
     parser.add_argument("-m", default=5, type=int, help="# rows of matrix A")
     parser.add_argument("-n", default=5, type=int, help="# columns of matrix A")
     parser.add_argument("-l", default=5, type=int, help="# columns of matrix B")
+    parser.add_argument("-p", default=".", type=str, help="where to output the test case")
     return parser.parse_args()
 
 def print_info(args):
-    print(f"Test case: {args.m * args.l}.in")
+    print(f"Test case: {args.p}/{args.m * args.l}.in")
     print(f"Dim of A: {args.m}x{args.n}")
     print(f"Dim of B: {args.n}x{args.l}")
 
@@ -18,7 +19,7 @@ def gen_random_mtx(m, n):
 
 def output(args, A, B):
     # Output m, n, l
-    fout = open(f"../testcases/{args.m * args.l}.in", "w")
+    fout = open(f"{args.p}/{args.m * args.l}.in", "w")
     fout.write(f"{args.m} {args.n} {args.l}\n")
 
     # Output mtx A

@@ -7,4 +7,5 @@ src/1gpu/mm_1gpu
 src/2gpus/mm_2gpus
 src/*.o
 src/*/out
+scripts/*.in
 .vscode/

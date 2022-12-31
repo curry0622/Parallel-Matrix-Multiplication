@@ -4,10 +4,10 @@
 
 It will randomly generate matrix A with dimension MxN and matrix B with dimension NxL.
 
-The output content will be stored in [testcases/M_N_L.in](../testcases/).
+The output content will be stored in **[P]/[M*L].in**. [P] has a default value, which is current directory.
 
 ```shell
-python3 gen.py -m [M] -n [N] -l [L]
+python3 gen.py -m [M] -n [N] -l [L] [Optional: -p [P]]
 ```
 
 Use below command to see each parameter's info.
@@ -19,10 +19,10 @@ python3 gen.py -h
 **Sample execution:**
 
 ```shell
-python3 gen.py -m 5 -n 4 -l 3
+python3 gen.py -m 5 -n 4 -l 3 -p ../testcases
 ```
 
-In [testcases/5_4_3.in](../testcases/), you will see below content:
+In [../testcases/15.in](../testcases/), you will see below content:
 
 ```txt
 5 4 3
@@ -41,10 +41,10 @@ In [testcases/5_4_3.in](../testcases/), you will see below content:
 
 It will check whether file_1 [F1] is the same as file_2 [F2] or not.
 
-The default value of [D] if 0. Set [D] to 1 if you want to see more debug messages.
+The default value of [D] is 0. Set [D] to 1 if you want to see more debug messages.
 
 ```shell
-python3 verify.py -f1 [F1] -f2 [F2] -d [D]
+python3 verify.py -f1 [F1] -f2 [F2] [Optional: -d [D]]
 ```
 
 Use below command to see each parameter's info.
