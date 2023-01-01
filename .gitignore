@@ -1,0 +1,14 @@
+src/seq/mm_seq
+src/pthread/mm_pthread
+src/mpi/mm_mpi
+src/openmp/mm_openmp
+src/hybrid/mm_hybrid
+src/1gpu/mm_1gpu
+src/2gpus/mm_2gpus
+src/*.o
+src/*/*out*
+src/*/*.csv
+scripts/*.in
+scripts/*.out
+scripts/__pycache__
+.vscode/
