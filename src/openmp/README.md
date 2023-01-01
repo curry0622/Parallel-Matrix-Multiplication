@@ -2,13 +2,11 @@
 
 ## How to Compile
 
-In this directory, enter the following command:
+In this directory, enter the following command. It will generate the executable file in the current directory.
 
 ```shell
 make
 ```
-
-It will generate the executable file in the current directory.
 
 If you want to remove it, please enter the following command:
 
