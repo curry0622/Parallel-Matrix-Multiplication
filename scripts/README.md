@@ -53,7 +53,7 @@ Use the following command to see each parameter's info.
 python3 verify.py -h
 ```
 
-**Sample execution:*
+**Sample execution:**
 
 ```shell
 python3 verify.py -f1 testcase.out -f2 yours.out -d 1
@@ -74,7 +74,7 @@ Optional parameters:
 * **[c]**: It stands for the `c` of `srun -c`
 
 ```shell
-python3 judge.py -e [E] -t [-T] [Optional: -N [N] -n [n] -c [c]]
+python3 judge.py -e [E] -t [T] [Optional: -N [N] -n [n] -c [c]]
 ```
 
 Use the following command to see each parameter's info.
