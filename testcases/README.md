@@ -2,9 +2,9 @@
 
 ## Input
 
-In the first line, three integers **𝑚** , **𝑛** and **𝑙** are given separated by space characters.
+In the first line, three integers **𝑚**, **𝑛** and **𝑙** are given separated by space characters.
 
-In the following lines, the **𝑚×𝑛**  matrix **𝐴** and the **𝑛×𝑙** matrix **𝐵** are given. All the numbers are integers.
+In the following lines, the **𝑚×𝑛** matrix **𝐴** and the **𝑛×𝑙** matrix **𝐵** are given. All the numbers are integers.
 
 ## Output
 
