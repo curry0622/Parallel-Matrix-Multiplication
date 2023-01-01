@@ -34,10 +34,10 @@ The following command will run your code and read [testcase 100.in](../testcases
 
 ## How to Verify
 
-In this directory, enter the following command:
+In this directory, enter the following command, where [TESTCASE] specifies which testcase to run.
 
 ```shell
-make verify [TESTCASE]
+make verify t=[TESTCASE]
 ```
 
 **Sample execution:**
@@ -45,7 +45,7 @@ make verify [TESTCASE]
 The following commands will verify your code on [testcase 100.in](../testcases/100.in).
 
 ```shell
-make verify 100
+make verify t=100.in
 ```
 
 Note 1: If you encounter permission error, please go to [scripts directory](../../scripts/) and enter the following command:
