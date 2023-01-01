@@ -1,4 +1,5 @@
 import os
+import time
 import argparse
 import subprocess
 from termcolor import colored
@@ -19,7 +20,10 @@ if __name__ == "__main__":
 
     for test in testcases:
         print(colored(f"Testcase: {test}", "yellow"))
-        subprocess.run([f"{args.e} {args.t}/{test} tmp.out"], shell=True)
+        start = time.time()
+        subprocess.run([f"{args.e} {args.t}/{test} tmp.out"], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        diff = time.time() - start
+        print(colored(f"Time: {diff:.3f} seconds", "white"))
         cmp_files(f"{args.t}/{test[:-3]}.out", "tmp.out")
         print()
         

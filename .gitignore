@@ -9,4 +9,5 @@ src/*.o
 src/*/*out*
 scripts/*.in
 scripts/*.out
+scripts/__pycache__
 .vscode/
