@@ -4,9 +4,17 @@ LDLIBS = -lpng
 CFLAGS = -lm -O3 -march=native -pipe -pthread
 CXXFLAGS = $(CFLAGS)
 TARGETS = mm_pthread
+TESTCASE_PATH = /home/pp22/pp22s69/share/testcases
 
 .PHONY: all
 all: $(TARGETS)
+
+verify: $(TARGETS)
+	srun -N1 -n1 -c$(c) ./mm_pthread $(TESTCASE_PATH)/$(t) tmp.out
+	python3 ../../scripts/verify.py -f1 $(TESTCASE_PATH)/$(firstword $(subst ., ,$(t))).out -f2 tmp.out
+
+judge: $(TARGETS)
+	python3 ../../scripts/judge.py -e ./mm_pthread -t $(TESTCASE_PATH) -c $(c)
 
 .PHONY: clean
 clean:
