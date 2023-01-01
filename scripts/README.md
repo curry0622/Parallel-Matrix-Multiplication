@@ -4,7 +4,7 @@
 
 It will randomly generate matrix A with dimension **[M]x[N]** and matrix B with dimension **[N]x[L]**.
 
-The output content will be stored in **[P]/[M*L].in**. **[P]** has a default value, which is the path of the current directory.
+The output content will be stored in **[P]/[M*L].in**. **[P]** has a default value if not specified, which is the path of the current directory.
 
 ```shell
 python3 gen.py -m [M] -n [N] -l [L] [Optional: -p [P]]
@@ -16,7 +16,7 @@ Use the following command to see each parameter's info.
 python3 gen.py -h
 ```
 
-**Sample execution:**
+e.g.
 
 ```shell
 python3 gen.py -m 5 -n 4 -l 3 -p ../testcases
@@ -53,7 +53,7 @@ Use the following command to see each parameter's info.
 python3 verify.py -h
 ```
 
-**Sample execution:**
+e.g.
 
 ```shell
 python3 verify.py -f1 testcase.out -f2 yours.out -d 1
@@ -67,8 +67,14 @@ Otherwise, it will output "Wrong!" and some debug messages.
 
 It will run your executable file **[E]** and check whether your outputs are same with all the testcases in the specified folder **[T]** or not.
 
+Optional parameters:
+
+* **[N]**: It stands for the `N` of `srun -N`
+* **[n]**: It stands for the `n` of `srun -n`
+* **[N]**: It stands for the `c` of `srun -c`
+
 ```shell
-python3 judge.py -e [E] -t [-T]
+python3 judge.py -e [E] -t [-T] [Optional: -N [N] -n [n] -c [c]]
 ```
 
 Use the following command to see each parameter's info.
@@ -77,8 +83,10 @@ Use the following command to see each parameter's info.
 python3 judge.py -h
 ```
 
-**Sample execution:**
+e.g.
 
 ```shell
-python3 judge.py -e ../src/seq/mm_seq -t ../testcases
+python3 judge.py -e ../src/seq/mm_seq -t ../testcases -N 1 -n 1 -c 12
 ```
+
+It will run your sequential implementation using `srun -N1 -n1 -c12` and judge your results with specified testcases.

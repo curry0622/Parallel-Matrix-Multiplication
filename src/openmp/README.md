@@ -48,6 +48,12 @@ The following commands will verify your code on [testcase 100.in](../testcases/1
 make verify 100 c=12
 ```
 
+Note: If you encounter permission error, please go to [scripts directory](../../scripts/) and enter the following command:
+
+```shell
+chmod 700 verify.py
+```
+
 ## How to Judge
 
 In this directory, enter the following command, where **[C]** specifies how many cores are used to run this program (i.e. `srun -c`).
@@ -62,4 +68,10 @@ The following commands will verify your code on all testcases using 12 cores.
 
 ```shell
 make judge c=12
+```
+
+Note: If you encounter permission error, please go to [scripts directory](../../scripts/) and enter the following command:
+
+```shell
+chmod 700 judge.py
 ```

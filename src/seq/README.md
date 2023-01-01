@@ -48,10 +48,22 @@ The following commands will verify your code on [testcase 100.in](../testcases/1
 make verify 100
 ```
 
+Note: If you encounter permission error, please go to [scripts directory](../../scripts/) and enter the following command:
+
+```shell
+chmod 700 verify.py
+```
+
 ## How to Judge
 
 In this directory, enter the following command, it will verify your code on all testcases.
 
 ```shell
 make judge
+```
+
+Note: If you encounter permission error, please go to [scripts directory](../../scripts/) and enter the following command:
+
+```shell
+chmod 700 judge.py
 ```
