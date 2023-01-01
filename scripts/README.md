@@ -37,7 +37,7 @@ In [../testcases/15.in](../testcases/), you will see something like:
 2 92 75 
 ```
 
-## Verify Results
+## Verify Output
 
 It will check whether file_1 **[F1]** is the same as file_2 **[F2]** or not.
 
@@ -62,3 +62,23 @@ python3 verify.py -f1 testcase.out -f2 yours.out -d 1
 It will output "Correct!" if two files are exactly the same.
 
 Otherwise, it will output "Wrong!" and some debug messages.
+
+## Judge All Outputs
+
+It will run your executable file **[E]** and check whether your outputs are same with all the testcases in the specified folder **[T]** or not.
+
+```shell
+python3 judge.py -e [E] -t [-T]
+```
+
+Use the following command to see each parameter's info.
+
+```shell
+python3 judge.py -h
+```
+
+**Sample execution:**
+
+```shell
+python3 judge.py -e ../src/seq/mm_seq -t ../testcases
+```

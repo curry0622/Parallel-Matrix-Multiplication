@@ -25,11 +25,11 @@ Second, type in the following command:
 
 e.g.
 
-The following command will run your code and read [testcase 100.in](../testcases/100.in) as input and output the result to **mine.out**.
+The following command will run your code and read [testcase 100.in](../testcases/100.in) as input and output the result to **tmp.out**.
 
 ```shell
 cd pthread
-./mm_pthread ../../testcases/100.in mine.out
+./mm_pthread ../../testcases/100.in tmp.out
 ```
 
 ## How to Verify
