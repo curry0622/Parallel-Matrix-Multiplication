@@ -24,7 +24,7 @@ In this directory, enter the following command, where **[C]** specifies how many
 srun -N1 -n1 -c[C] ./mm_openmp [INPUT_FILE] [OUTPUT_FILE]
 ```
 
-e.g.
+**Sample execution:**
 
 The following command will run your code using 12 cores and read [testcase 100.in](../testcases/100.in) as input and output the result to **tmp.out**.
 
@@ -40,7 +40,7 @@ In this directory, enter the following command, where **[C]** specifies how many
 make verify [TESTCASE] c=[C]
 ```
 
-e.g.
+**Sample execution:**
 
 The following commands will verify your code on [testcase 100.in](../testcases/100.in) using 12 cores.
 
@@ -64,7 +64,7 @@ In this directory, enter the following command, where **[C]** specifies how many
 make judge c=[C]
 ```
 
-e.g.
+**Sample execution:**
 
 The following commands will verify your code on all testcases using 12 cores.
 

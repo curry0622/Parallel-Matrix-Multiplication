@@ -24,7 +24,7 @@ In this directory, enter the following command:
 ./mm_seq [INPUT_FILE] [OUTPUT_FILE]
 ```
 
-e.g.
+**Sample execution:**
 
 The following command will run your code and read [testcase 100.in](../testcases/100.in) as input and output the result to **tmp.out**.
 
@@ -40,7 +40,7 @@ In this directory, enter the following command:
 make verify [TESTCASE]
 ```
 
-e.g.
+**Sample execution:**
 
 The following commands will verify your code on [testcase 100.in](../testcases/100.in).
 
