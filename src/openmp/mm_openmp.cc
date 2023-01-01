@@ -5,8 +5,8 @@
 
 int main(int argc, char *argv[]) {
     // Timer start
-    clock_t prog_t, cpu_t;
-    prog_t = clock();
+    double prog_t, cpu_t;
+    prog_t = omp_get_wtime();
 
     // Read inputs
     assert(argc == 3);
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     fclose(f);
 
     // Multiply a and b
-    cpu_t = clock();
+    cpu_t = omp_get_wtime();
     for (int i = 0; i < m; i++) {
         #pragma omp parallel for schedule(static)
         for (int j = 0; j < l; j++) {
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
                 c[i * l + j] += a[i * n + k] * b[k * l + j];
         }
     }
-    cpu_t = clock() - cpu_t;
+    cpu_t = omp_get_wtime() - cpu_t;
     
     // Output c to file
     f = fopen(argv[2], "w");
@@ -48,10 +48,10 @@ int main(int argc, char *argv[]) {
     fclose(f);
 
     // Timer end
-    prog_t = clock() - prog_t;
-    printf("Total time: %f seconds\n", (double)prog_t / CLOCKS_PER_SEC);
-    printf("CPU time: %f seconds\n", (double)cpu_t / CLOCKS_PER_SEC);
-    printf("IO time: %f seconds\n", (double)(prog_t - cpu_t) / CLOCKS_PER_SEC);
+    prog_t = omp_get_wtime() - prog_t;
+    printf("Total time: %f seconds\n", prog_t);
+    printf("CPU time: %f seconds\n", cpu_t);
+    printf("IO time: %f seconds\n", prog_t - cpu_t);
 
     return 0;
 }
