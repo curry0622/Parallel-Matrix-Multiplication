@@ -42,7 +42,7 @@ make verify t=[TESTCASE]
 
 **Sample execution:**
 
-The following commands will verify your code on [testcase 100.in](../testcases/100.in).
+The following command will verify your code on [testcase 100.in](../testcases/100.in).
 
 ```shell
 make verify t=100.in

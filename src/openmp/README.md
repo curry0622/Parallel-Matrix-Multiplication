@@ -42,7 +42,7 @@ make verify t=[TESTCASE] c=[C]
 
 **Sample execution:**
 
-The following commands will verify your code on [testcase 100.in](../testcases/100.in) using 12 cores.
+The following command will verify your code on [testcase 100.in](../testcases/100.in) using 12 cores.
 
 ```shell
 make verify t=100.in c=12
@@ -66,7 +66,7 @@ make judge c=[C]
 
 **Sample execution:**
 
-The following commands will verify your code on all testcases using 12 cores.
+The following command will verify your code on all testcases using 12 cores.
 
 ```shell
 make judge c=12
