@@ -48,11 +48,13 @@ The following commands will verify your code on [testcase 100.in](../testcases/1
 make verify 100 c=12
 ```
 
-Note: If you encounter permission error, please go to [scripts directory](../../scripts/) and enter the following command:
+Note 1: If you encounter permission error, please go to [scripts directory](../../scripts/) and enter the following command:
 
 ```shell
 chmod 700 verify.py
 ```
+
+Note 2: If you want to use local test cases, you should modify `TESTCASE_PATH` in [Makefile](./Makefile).
 
 ## How to Judge
 
@@ -70,8 +72,10 @@ The following commands will verify your code on all testcases using 12 cores.
 make judge c=12
 ```
 
-Note: If you encounter permission error, please go to [scripts directory](../../scripts/) and enter the following command:
+Note 1: If you encounter permission error, please go to [scripts directory](../../scripts/) and enter the following command:
 
 ```shell
 chmod 700 judge.py
 ```
+
+Note 2: If you want to use local test cases, you should modify `TESTCASE_PATH` in [Makefile](./Makefile).

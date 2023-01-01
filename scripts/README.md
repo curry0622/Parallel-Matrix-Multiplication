@@ -16,7 +16,7 @@ Use the following command to see each parameter's info.
 python3 gen.py -h
 ```
 
-e.g.
+**Sample execution:**
 
 ```shell
 python3 gen.py -m 5 -n 4 -l 3 -p ../testcases
@@ -53,7 +53,7 @@ Use the following command to see each parameter's info.
 python3 verify.py -h
 ```
 
-e.g.
+**Sample execution:*
 
 ```shell
 python3 verify.py -f1 testcase.out -f2 yours.out -d 1
@@ -83,7 +83,7 @@ Use the following command to see each parameter's info.
 python3 judge.py -h
 ```
 
-e.g.
+**Sample execution:**
 
 ```shell
 python3 judge.py -e ../src/seq/mm_seq -t ../testcases -N 1 -n 1 -c 12
