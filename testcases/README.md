@@ -12,7 +12,7 @@ Print elements of the **𝑚×𝑙** matrix **𝐶 (𝑐𝑖𝑗)**. Print a sin
 
 ## Constraints
 
-1. 1 ≤ 𝑚, 𝑛, 𝑙 ≤ 10000
+1. 1 ≤ 𝑚, 𝑛, 𝑙 ≤ 5000
 2. 0 ≤ 𝑎𝑖𝑗, 𝑏𝑖𝑗 ≤ 100
 
 ## Sample Input

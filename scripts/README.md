@@ -71,7 +71,7 @@ Optional parameters:
 
 * **[N]**: It stands for the `N` of `srun -N`
 * **[n]**: It stands for the `n` of `srun -n`
-* **[N]**: It stands for the `c` of `srun -c`
+* **[c]**: It stands for the `c` of `srun -c`
 
 ```shell
 python3 judge.py -e [E] -t [-T] [Optional: -N [N] -n [n] -c [c]]
