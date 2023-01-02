@@ -3,7 +3,6 @@
 #include <time.h>
 #include <pthread.h>
 
-
 int m, n, l;
 long *a, *b, *c;
 
@@ -25,8 +24,6 @@ void* matrix_multiply(void* arg){
 }
 
 Range cal_range(int n, int ncpus, int thread_ID){
-    // printf("n=%d: ncpus=%d, thread_ID=%d\n", n, ncpus, thread_ID);
-
     Range range = Range();
     int chunk_size = n / ncpus;
     int remainder = n % ncpus;
@@ -41,7 +38,6 @@ Range cal_range(int n, int ncpus, int thread_ID){
     
     range.start = start;
     range.end = start + chunk_size - 1;    // end is concluded
-    // printf("thread %d: start=%d, end=%d\n", thread_ID, range.start, range.end);
     return range;
 }
 
@@ -88,7 +84,6 @@ int main(int argc, char *argv[]) {
     pthread_t threads[ncpus];
     for (int t=0; t<ncpus; t++) {
         Range range = cal_range(n, ncpus, t);
-        printf("thread %d: start=%d, end=%d\n", t, range.start, range.end);
         pthread_create(&threads[t], NULL, matrix_multiply, (void*) &range);
     }
 	for (int t=0; t<ncpus; t++)
