@@ -4,7 +4,7 @@
 #include <pthread.h>
 
 int m, n, l;
-long *a, *b, *c;
+int *a, *b, *c;
 
 struct Range{
 	int start;
@@ -13,11 +13,12 @@ struct Range{
 
 void* multiply_naive(void* arg){
     Range* range = (Range*) arg;     // get range
-    for (int i = range->start; i < range->end; i++) {
+    for (int i = range->start; i <= range->end; i++) {
         for (int j = 0; j < l; j++) {
-            c[i * l + j] = 0;
+            int sum = 0;
             for (int k = 0; k < n; k++)
-                c[i * l + j] += a[i * n + k] * b[k * l + j];
+                sum += a[i * n + k] * b[k * l + j];
+            c[i * l + j] = sum;
         }
     }
     pthread_exit(NULL);
@@ -25,7 +26,7 @@ void* multiply_naive(void* arg){
 
 void* multiply_cache_friendly(void* arg){
     Range* range = (Range*) arg;     // get range
-    for (int i = range->start; i < range->end; i++) {
+    for (int i = range->start; i <= range->end; i++) {
         for (int k = 0; k < n; k++) {
             int r = a[i * n + k];
             for (int j = 0; j < l; j++)
@@ -35,10 +36,10 @@ void* multiply_cache_friendly(void* arg){
     pthread_exit(NULL);
 }
 
-Range cal_range(int n, int ncpus, int thread_ID){
-    Range range = Range();
-    int chunk_size = n / ncpus;
-    int remainder = n % ncpus;
+Range* cal_range(int m, int ncpus, int thread_ID){
+    Range* range = new Range();
+    int chunk_size = m / ncpus;
+    int remainder = m % ncpus;
     int start;
 
     if (thread_ID < remainder){
@@ -48,8 +49,8 @@ Range cal_range(int n, int ncpus, int thread_ID){
     else
         start = chunk_size * thread_ID + remainder;
     
-    range.start = start;
-    range.end = start + chunk_size - 1;    // end is concluded
+    range->start = start;
+    range->end = start + chunk_size - 1;    // end is included
     return range;
 }
 
@@ -73,9 +74,9 @@ int main(int argc, char *argv[]) {
     FILE *f = fopen(argv[1], "r");
     assert(f);
     fscanf(f, "%d %d %d", &m, &n, &l);
-    a = new long[m * n];
-    b = new long[n * l];
-    c = new long[m * l];
+    a = new int[m * n];
+    b = new int[n * l];
+    c = new int[m * l];
     for (int i = 0; i < m; i++)
         for (int j = 0; j < n; j++)
             fscanf(f, "%d", &a[i * n + j]);
@@ -95,8 +96,8 @@ int main(int argc, char *argv[]) {
     // pthread parallel
     pthread_t threads[ncpus];
     for (int t=0; t<ncpus; t++) {
-        Range range = cal_range(n, ncpus, t);
-        pthread_create(&threads[t], NULL, multiply_cache_friendly, (void*) &range);
+        Range* range = cal_range(m, ncpus, t);
+        pthread_create(&threads[t], NULL, multiply_cache_friendly, (void*) range);
     }
 	for (int t=0; t<ncpus; t++)
 		pthread_join(threads[t], NULL);	
