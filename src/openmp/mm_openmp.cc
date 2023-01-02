@@ -3,6 +3,29 @@
 #include <time.h>
 #include <omp.h>
 
+void multiply(int *a, int *b, int *c, int m, int n, int l) {
+    #pragma omp parallel for schedule(static)
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < l; j++) {
+            int sum = 0;
+            for (int k = 0; k < n; k++)
+                sum += a[i * n + k] * b[k * l + j];
+            c[i * l + j] = sum;
+        }
+    }
+}
+
+void multiply_cache_friendly(int *a, int *b, int *c, int m, int n, int l) {
+    #pragma omp parallel for schedule(static)
+    for (int i = 0; i < m; i++) {
+        for (int k = 0; k < n; k++) {
+            int r = a[i * n + k];
+            for (int j = 0; j < l; j++)
+                c[i * l + j] += r * b[k * l + j];
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
     // Timer start
     double prog_t, cpu_t;
@@ -14,9 +37,9 @@ int main(int argc, char *argv[]) {
     assert(f);
     int m, n, l;
     fscanf(f, "%d %d %d", &m, &n, &l);
-    long *a = new long[m * n];
-    long *b = new long[n * l];
-    long *c = new long[m * l];
+    int *a = new int[m * n];
+    int *b = new int[n * l];
+    int *c = new int[m * l];
     for (int i = 0; i < m; i++)
         for (int j = 0; j < n; j++)
             fscanf(f, "%d", &a[i * n + j]);
@@ -27,14 +50,7 @@ int main(int argc, char *argv[]) {
 
     // Multiply a and b
     cpu_t = omp_get_wtime();
-    for (int i = 0; i < m; i++) {
-        #pragma omp parallel for schedule(static)
-        for (int j = 0; j < l; j++) {
-            c[i * l + j] = 0;
-            for (int k = 0; k < n; k++)
-                c[i * l + j] += a[i * n + k] * b[k * l + j];
-        }
-    }
+    multiply_cache_friendly(a, b, c, m, n, l);
     cpu_t = omp_get_wtime() - cpu_t;
     
     // Output c to file
