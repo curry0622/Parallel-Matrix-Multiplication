@@ -2,9 +2,12 @@
 #include <assert.h>
 #include <time.h>
 #include <omp.h>
+#include <emmintrin.h>
+#include <smmintrin.h>
+#include <pmmintrin.h>
 
-void multiply(int *a, int *b, int *c, int m, int n, int l) {
-    #pragma omp parallel for schedule(static)
+void multiply_naive(int *a, int *b, int *c, int m, int n, int l) {
+    #pragma omp parallel for schedule(dynamic, 1)
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < l; j++) {
             int sum = 0;
@@ -16,12 +19,35 @@ void multiply(int *a, int *b, int *c, int m, int n, int l) {
 }
 
 void multiply_cache_friendly(int *a, int *b, int *c, int m, int n, int l) {
-    #pragma omp parallel for schedule(static)
+    #pragma omp parallel for schedule(dynamic, 1)
     for (int i = 0; i < m; i++) {
         for (int k = 0; k < n; k++) {
             int r = a[i * n + k];
             for (int j = 0; j < l; j++)
                 c[i * l + j] += r * b[k * l + j];
+        }
+    }
+}
+
+void multiply_sse(int *a, int *b, int *c, int m, int n, int l) {
+    # pragma omp parallel for schedule(dynamic, 1)
+    for (int i = 0; i < m; i++) {
+        for (int k = 0; k < n; k++) {
+            int end = l - (l % 4);
+            int r = a[i * n + k];
+            __m128i v_r = _mm_set1_epi32(r);
+
+            for (int j = 0; j < end; j += 4) {
+                __m128i v_c = _mm_loadu_si128((__m128i *) &c[i * l + j]);
+                __m128i v_b = _mm_loadu_si128((__m128i *) &b[k * l + j]);
+                v_c = _mm_add_epi32(v_c, _mm_mullo_epi32(v_r, v_b));
+                _mm_storeu_si128((__m128i *) &c[i * l + j], v_c);
+            }
+
+            if (end != l) {
+                for (int j = l - (l % 4); j < l; j++)
+                    c[i * l + j] += r * b[k * l + j];
+            }
         }
     }
 }
