@@ -11,13 +11,25 @@ struct Range{
 	int end;
 };
 
-void* matrix_multiply(void* arg){
+void* multiply_naive(void* arg){
     Range* range = (Range*) arg;     // get range
     for (int i = range->start; i < range->end; i++) {
         for (int j = 0; j < l; j++) {
             c[i * l + j] = 0;
             for (int k = 0; k < n; k++)
                 c[i * l + j] += a[i * n + k] * b[k * l + j];
+        }
+    }
+    pthread_exit(NULL);
+}
+
+void* multiply_cache_friendly(void* arg){
+    Range* range = (Range*) arg;     // get range
+    for (int i = range->start; i < range->end; i++) {
+        for (int k = 0; k < n; k++) {
+            int r = a[i * n + k];
+            for (int j = 0; j < l; j++)
+                c[i * l + j] += r * b[k * l + j];
         }
     }
     pthread_exit(NULL);
@@ -84,7 +96,7 @@ int main(int argc, char *argv[]) {
     pthread_t threads[ncpus];
     for (int t=0; t<ncpus; t++) {
         Range range = cal_range(n, ncpus, t);
-        pthread_create(&threads[t], NULL, matrix_multiply, (void*) &range);
+        pthread_create(&threads[t], NULL, multiply_cache_friendly, (void*) &range);
     }
 	for (int t=0; t<ncpus; t++)
 		pthread_join(threads[t], NULL);	
