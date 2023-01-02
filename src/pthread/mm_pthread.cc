@@ -2,56 +2,65 @@
 #include <assert.h>
 #include <time.h>
 #include <pthread.h>
+#include <emmintrin.h>
+#include <smmintrin.h>
+#include <pmmintrin.h>
 
 int m, n, l;
 int *a, *b, *c;
+pthread_mutex_t mutex;
+int row_num = 0;
 
-struct Range{
-	int start;
-	int end;
-};
-
-void* multiply_naive(void* arg){
-    Range* range = (Range*) arg;     // get range
-    for (int i = range->start; i <= range->end; i++) {
-        for (int j = 0; j < l; j++) {
-            int sum = 0;
-            for (int k = 0; k < n; k++)
-                sum += a[i * n + k] * b[k * l + j];
-            c[i * l + j] = sum;
-        }
+void multiply_naive(int row){
+    for (int j = 0; j < l; j++) {
+        int sum = 0;
+        for (int k = 0; k < n; k++)
+            sum += a[row * n + k] * b[k * l + j];
+        c[row * l + j] = sum;
     }
-    pthread_exit(NULL);
 }
 
-void* multiply_cache_friendly(void* arg){
-    Range* range = (Range*) arg;     // get range
-    for (int i = range->start; i <= range->end; i++) {
-        for (int k = 0; k < n; k++) {
-            int r = a[i * n + k];
-            for (int j = 0; j < l; j++)
-                c[i * l + j] += r * b[k * l + j];
-        }
+void multiply_cache_friendly(int row){
+    for (int k = 0; k < n; k++) {
+        int r = a[row * n + k];
+        for (int j = 0; j < l; j++)
+            c[row * l + j] += r * b[k * l + j];
     }
-    pthread_exit(NULL);
 }
 
-Range* cal_range(int m, int ncpus, int thread_ID){
-    Range* range = new Range();
-    int chunk_size = m / ncpus;
-    int remainder = m % ncpus;
-    int start;
+void multiply_sse(int row){
+    for (int k = 0; k < n; k++) {
+        int end = l - (l % 4);
+        int r = a[row * n + k];
+        __m128i v_r = _mm_set1_epi32(r);
 
-    if (thread_ID < remainder){
-        start = chunk_size * thread_ID + thread_ID;
-        chunk_size += 1;
+        for (int j = 0; j < end; j += 4) {
+            __m128i v_c = _mm_loadu_si128((__m128i *) &c[row * l + j]);
+            __m128i v_b = _mm_loadu_si128((__m128i *) &b[k * l + j]);
+            v_c = _mm_add_epi32(v_c, _mm_mullo_epi32(v_r, v_b));
+            _mm_storeu_si128((__m128i *) &c[row * l + j], v_c);
+        }
+
+        if (end != l) {
+            for (int j = l - (l % 4); j < l; j++)
+                c[row * l + j] += r * b[k * l + j];
+        }
     }
-    else
-        start = chunk_size * thread_ID + remainder;
-    
-    range->start = start;
-    range->end = start + chunk_size - 1;    // end is included
-    return range;
+}
+
+void* matrix_multiply(void*){
+    int row_to_calc;
+    while (true){
+        pthread_mutex_lock(&mutex);
+        row_to_calc = row_num;
+        row_num++;
+        pthread_mutex_unlock(&mutex);
+        if (row_to_calc >= m)
+            break;
+        else
+            multiply_sse(row_to_calc);
+    }
+    pthread_exit(NULL);
 }
 
 double cal_time(timespec start, timespec end){
@@ -60,9 +69,6 @@ double cal_time(timespec start, timespec end){
 
 int main(int argc, char *argv[]) {
     // Timer start
-    // clock_t prog_t, cpu_t;
-    // prog_t = clock();
-
     struct timespec prog_start = {0, 0};
     struct timespec prog_end = {0, 0};
     struct timespec cpu_start = {0, 0};
@@ -95,10 +101,9 @@ int main(int argc, char *argv[]) {
 
     // pthread parallel
     pthread_t threads[ncpus];
-    for (int t=0; t<ncpus; t++) {
-        Range* range = cal_range(m, ncpus, t);
-        pthread_create(&threads[t], NULL, multiply_cache_friendly, (void*) range);
-    }
+    pthread_mutex_init(&mutex, NULL);
+    for (int t=0; t<ncpus; t++) 
+        pthread_create(&threads[t], NULL, matrix_multiply, NULL);
 	for (int t=0; t<ncpus; t++)
 		pthread_join(threads[t], NULL);	
     
@@ -115,13 +120,7 @@ int main(int argc, char *argv[]) {
     }
     fclose(f);
 
-
     // Timer end
-    // prog_t = clock() - prog_t;
-    // printf("Total time: %f seconds\n", (double)prog_t / CLOCKS_PER_SEC);
-    // printf("CPU time: %f seconds\n", (double)cpu_t / CLOCKS_PER_SEC);
-    // printf("IO time: %f seconds\n", (double)(prog_t - cpu_t) / CLOCKS_PER_SEC);
-
     clock_gettime(CLOCK_MONOTONIC, &prog_end);
     double total_time = cal_time(prog_start, prog_end);
     double cpu_time = cal_time(cpu_start, cpu_end);
