@@ -32,7 +32,7 @@ srun -N1 -n1 -c12 ./mm_pthread ../../testcases/100.in tmp.out
 
 ## How to Verify
 
-In this directory, enter the following command, where [TESTCASE] specifies which testcase to run and **[C]** specifies how many cores are used to run this program.
+In this directory, enter the following command, where **[TESTCASE]** specifies which testcase to run and **[C]** specifies how many cores are used to run this program.
 
 ```shell
 make verify t=[TESTCASE] c=[C]

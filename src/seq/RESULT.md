@@ -18,6 +18,8 @@ Note: **TLE killed** means that the program got killed because of the runtime li
 
 ## Cache Friendly Implementation
 
+**Baseline version:**
+
 | Testcase    | -N | -n | -c | runtime |
 |-------------|----|----|----|---------|
 | 1.in        | 1  | 1  | 1  | 0.145   |
@@ -30,7 +32,7 @@ Note: **TLE killed** means that the program got killed because of the runtime li
 | 16000000.in | 1  | 1  | 1  | 31.741  |
 | 25000000.in | 1  | 1  | 1  | 65.889  |
 
-## SIMD-SSE Implementation
+**With SIMD-V1:**
 
 | Testcase    | -N | -n | -c | runtime |
 |-------------|----|----|----|---------|
@@ -43,3 +45,17 @@ Note: **TLE killed** means that the program got killed because of the runtime li
 | 9000000.in  | 1  | 1  | 1  | 13.830  |
 | 16000000.in | 1  | 1  | 1  | 31.394  |
 | 25000000.in | 1  | 1  | 1  | 65.923  |
+
+**With SIMD-V2:**
+
+| Testcase    | -N | -n | -c | runtime |
+|-------------|----|----|----|---------|
+| 1.in        | 1  | 1  | 1  | 0.166   |
+| 4.in        | 1  | 1  | 1  | 0.059   |
+| 100.in      | 1  | 1  | 1  | 0.052   |
+| 10000.in    | 1  | 1  | 1  | 0.055   |
+| 1000000.in  | 1  | 1  | 1  | 0.604   |
+| 4000000.in  | 1  | 1  | 1  | 3.842   |
+| 9000000.in  | 1  | 1  | 1  | 12.363  |
+| 16000000.in | 1  | 1  | 1  | 27.491  |
+| 25000000.in | 1  | 1  | 1  | 50.251  |
