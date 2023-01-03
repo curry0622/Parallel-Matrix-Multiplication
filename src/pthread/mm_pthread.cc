@@ -48,6 +48,38 @@ void multiply_sse(int row){
     }
 }
 
+void multiply_sse_v2(int row){
+    int k_end = n - (n % 4);
+    for (int k = 0; k < k_end; k += 4) {
+        int l_end = l - (l % 4);
+        __m128i v_r = _mm_loadu_si128((__m128i *) &a[row * n + k]);
+
+        for (int j = 0; j < l_end; j += 4) {
+            __m128i v_c = _mm_loadu_si128((__m128i *) &c[row * l + j]);
+            for(int p = 0; p < 4; p++) {
+                __m128i v_b = _mm_loadu_si128((__m128i *) &b[(k + p) * l + j]);
+                __m128i pth_v_a = _mm_shuffle_epi32(v_r, _MM_SHUFFLE(p, p, p, p)); // get the p-th element of v_r
+                v_c = _mm_add_epi32(v_c, _mm_mullo_epi32(pth_v_a, v_b));
+            }
+            _mm_storeu_si128((__m128i *) &c[row * l + j], v_c);
+        }
+
+        if (l_end != l) {
+            for (int j = l - (l % 4); j < l; j++)
+                for(int p = 0; p < 4; p++)
+                    c[row * l + j] += a[row * n + (k + p)] * b[(k + p) * l + j];
+        }
+    }
+
+    if(k_end != n) {
+        for (int k = n - (n % 4); k < n; k++) {
+            int r = a[row * n + k];
+            for (int j = 0; j < l; j++)
+                c[row * l + j] += r * b[k * l + j];
+        }
+    }
+}
+
 void* matrix_multiply(void*){
     int row_to_calc;
     while (true){
@@ -58,7 +90,7 @@ void* matrix_multiply(void*){
         if (row_to_calc >= m)
             break;
         else
-            multiply_sse(row_to_calc);
+            multiply_sse_v2(row_to_calc);
     }
     pthread_exit(NULL);
 }
