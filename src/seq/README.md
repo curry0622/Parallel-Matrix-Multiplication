@@ -32,7 +32,7 @@ The following command will run your code and read [testcase 100.in](../testcases
 
 ## How to Verify
 
-In this directory, enter the following command, where [TESTCASE] specifies which testcase to run.
+In this directory, enter the following command, where **[TESTCASE]** specifies which testcase to run.
 
 ```shell
 make verify t=[TESTCASE]

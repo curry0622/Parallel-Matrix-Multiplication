@@ -38,7 +38,7 @@ srun -N2 -n4 -c8 ./mm_mpi ../../testcases/100.in tmp.out
 
 ## How to Verify
 
-In this directory, enter the following command, where [TESTCASE] specifies which testcase to run and other parameters are same with the above mentioned.
+In this directory, enter the following command, where **[TESTCASE]** specifies which testcase to run and other parameters are same with the above mentioned.
 
 ```shell
 make verify t=[TESTCASE] N=[N] n=[n] c=[C]
