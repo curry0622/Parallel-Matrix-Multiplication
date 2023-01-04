@@ -50,12 +50,45 @@ void multiply_sse(int row, int start){
     }
 }
 
+void multiply_sse_v2(int row, int start){
+    int new_row = row - start;
+    int k_end = n - (n % 4);
+    for (int k = 0; k < k_end; k += 4) {
+        int l_end = l - (l % 4);
+        __m128i v_r = _mm_loadu_si128((__m128i *) &a[row * n + k]);
+
+        for (int j = 0; j < l_end; j += 4) {
+            __m128i v_c = _mm_loadu_si128((__m128i *) &c_part[new_row * l + j]);
+            for(int p = 0; p < 4; p++) {
+                __m128i v_b = _mm_loadu_si128((__m128i *) &b[(k + p) * l + j]);
+                __m128i pth_v_a = _mm_shuffle_epi32(v_r, _MM_SHUFFLE(p, p, p, p)); // get the p-th element of v_r
+                v_c = _mm_add_epi32(v_c, _mm_mullo_epi32(pth_v_a, v_b));
+            }
+            _mm_storeu_si128((__m128i *) &c_part[new_row * l + j], v_c);
+        }
+
+        if (l_end != l) {
+            for (int j = l - (l % 4); j < l; j++)
+                for(int p = 0; p < 4; p++)
+                    c_part[new_row * l + j] += a[row * n + (k + p)] * b[(k + p) * l + j];
+        }
+    }
+
+    if(k_end != n) {
+        for (int k = n - (n % 4); k < n; k++) {
+            int r = a[row * n + k];
+            for (int j = 0; j < l; j++)
+                c_part[new_row * l + j] += r * b[k * l + j];
+        }
+    }
+}
+
 
 void calculate_rank_rows(int* info, int m, int size, int rank){
 	int rank_rows = m / size;
 	int remainder = m % size;
 	int start;
-	if (rank < remainder){   //表示要多一個資料
+	if (rank < remainder){   // will have one more data
 		rank_rows += 1;
 		start = rank_rows * rank;
 	} 
@@ -115,7 +148,7 @@ int main(int argc, char *argv[]) {
         c_part[i] = 0;
 
     for (int i=start; i<start+rank_rows; i++) {
-        multiply_sse(i, start);
+        multiply_sse_v2(i, start);
     }
 
 
