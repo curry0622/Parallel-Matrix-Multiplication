@@ -1,7 +1,7 @@
 import argparse
 import filecmp
 from difflib import Differ
-from termcolor import colored
+from utils import colored_text
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -13,9 +13,9 @@ def parse_args():
 def cmp_files(f1, f2):
     same = filecmp.cmp(f1, f2)
     if(same):
-        print(colored("Correct!", "green"))
+        colored_text("Correct!", "green")
     else:
-        print(colored("Wrong!", "red"))
+        colored_text("Wrong!", "red")
     return same
 
 def diff_files(f1, f2):
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     f1 = args.f1
     f2 = args.f2
     debug = args.d
-    print(colored(f"Verifying {f1} and {f2}", "yellow"))
+    colored_text(f"Verifying {f1} and {f2}", "yellow")
     
     if(debug):
         diff_files(f1, f2)

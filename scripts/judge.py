@@ -2,7 +2,7 @@ import os
 import time
 import argparse
 import subprocess
-from termcolor import colored
+from utils import colored_text
 from verify import cmp_files
 
 def parse_args():
@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     # Run testcases
     for test in testcases:
-        print(colored(f"Testcase: {test}", "yellow"))
+        colored_text(f"Testcase: {test}", "yellow")
         start = time.time()
         subprocess.run(
             [f"srun -N{args.N} -n{args.n} -c{args.c} {args.e} {args.t}/{test} tmp.out"],
@@ -38,7 +38,7 @@ if __name__ == "__main__":
             stderr=subprocess.DEVNULL
         )
         runtime = time.time() - start
-        print(colored(f"Runtime: {runtime:.3f} seconds", "white"))
+        colored_text(f"Runtime: {runtime:.3f} seconds", "white")
         correct = cmp_files(f"{args.t}/{test[:-3]}.out", "tmp.out")
         print()
         file.write(f"{test},{args.N},{args.n},{args.c},{runtime:.3f},{correct}\n")
