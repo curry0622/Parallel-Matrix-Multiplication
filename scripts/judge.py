@@ -12,6 +12,7 @@ def parse_args():
     parser.add_argument("-N", type=int, default=1, help="srun -N")
     parser.add_argument("-n", type=int, default=1, help="srun -n")
     parser.add_argument("-c", type=int, default=1, help="srun -c")
+    parser.add_argument("-gpu", type=int, default=0, help="default 0, 1 for using gpu")
     return parser.parse_args()
 
 if __name__ == "__main__":
@@ -31,12 +32,20 @@ if __name__ == "__main__":
     for test in testcases:
         colored_text(f"Testcase: {test}", "yellow")
         start = time.time()
-        subprocess.run(
-            [f"srun -N{args.N} -n{args.n} -c{args.c} {args.e} {args.t}/{test} tmp.out"],
-            shell=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
+        if(args.gpu == 0):
+            subprocess.run(
+                [f"srun -N{args.N} -n{args.n} -c{args.c} {args.e} {args.t}/{test} tmp.out"],
+                shell=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+        else:
+            subprocess.run(
+                [f"{args.e} {args.t}/{test} tmp.out"],
+                shell=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
         runtime = time.time() - start
         colored_text(f"Runtime: {runtime:.3f} seconds", "white")
         correct = cmp_files(f"{args.t}/{test[:-3]}.out", "tmp.out")

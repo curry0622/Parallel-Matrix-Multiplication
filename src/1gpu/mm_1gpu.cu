@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
+#include <time.h>
 
 #define B 32
 
@@ -41,7 +42,7 @@ void output(char *filename) {
     // Write c
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < l; j++)
-            fprintf(f, "%ld ", c[i * l + j]);
+            fprintf(f, "%d ", c[i * l + j]);
         fprintf(f, "\n");
     }
 
@@ -49,7 +50,7 @@ void output(char *filename) {
     fclose(f);
 }
 
-__global__ void multiply_gpu(int *d_a, int *d_b, int *d_c, int m, int n, int l) {
+__global__ void multiply_naive(int *d_a, int *d_b, int *d_c, int m, int n, int l) {
     int row_idx = blockIdx.y * blockDim.y + threadIdx.y;
     int col_idx = blockIdx.x * blockDim.x + threadIdx.x;
     if(row_idx >= m || col_idx >= l) return;
@@ -59,33 +60,18 @@ __global__ void multiply_gpu(int *d_a, int *d_b, int *d_c, int m, int n, int l) 
     d_c[row_idx * l + col_idx] = sum;
 }
 
-void multiply_naive(int *a, int *b, int *c, int m, int n, int l) {
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < l; j++) {
-            int sum = 0;
-            for (int k = 0; k < n; k++)
-                sum += a[i * n + k] * b[k * l + j];
-            c[i * l + j] = sum;
-        }
-    }
-}
-
-void multiply_cache_friendly(int *a, int *b, int *c, int m, int n, int l) {
-    for (int i = 0; i < m; i++) {
-        for (int k = 0; k < n; k++) {
-            int r = a[i * n + k];
-            for (int j = 0; j < l; j++)
-                c[i * l + j] += r * b[k * l + j];
-        }
-    }
-}
-
 int main(int argc, char *argv[]) {
+    // Timer start
+    clock_t prog_t, input_t, output_t;
+    prog_t = clock();
+
     // Argument check
     assert(argc == 3);
 
     // Read inputs
+    input_t = clock();
     input(argv[1]);
+    input_t = clock() - input_t;
 
     // Allocate memory on device
     int *d_a, *d_b, *d_c;
@@ -93,16 +79,28 @@ int main(int argc, char *argv[]) {
     cudaMalloc((void**)&d_b, n * l * sizeof(int));
     cudaMalloc((void**)&d_c, m * l * sizeof(int));
 
+    // Copy inputs to device
+    cudaMemcpy(d_a, a, m * n * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_b, b, n * l * sizeof(int), cudaMemcpyHostToDevice);
+
     // Multiply a and b
-    printf("Multiplying a and b on GPU...");
-    multiply_gpu<<<dim3(l / B, m / B), dim3(B, B)>>>(d_a, d_b, d_c, m, n, l);
+    printf("Multiplying a and b on GPU...\n");
+    multiply_naive<<<dim3(l / B + 1, m / B + 1), dim3(B, B)>>>(d_a, d_b, d_c, m, n, l);
     printf("done\n");
 
     // Copy result from device to host
     cudaMemcpy(c, d_c, m * l * sizeof(int), cudaMemcpyDeviceToHost);
     
     // Output c to file
+    output_t = clock();
     output(argv[2]);
+    output_t = clock() - output_t;
+
+    // Print time
+    prog_t = clock() - prog_t;
+    printf("Time: %f\n", (double)prog_t / CLOCKS_PER_SEC);
+    printf("IO time: %f\n", (double)(input_t + output_t) / CLOCKS_PER_SEC);
+    printf("GPU time: %f\n", (double)(prog_t - input_t - output_t) / CLOCKS_PER_SEC);
 
     return 0;
 }

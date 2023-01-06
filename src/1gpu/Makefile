@@ -17,4 +17,4 @@ verify: $(TARGETS)
 	python3 ../../scripts/verify.py -f1 $(TESTCASE_PATH)/$(firstword $(subst ., ,$(t))).out -f2 tmp.out
 
 judge: $(TARGETS)
-	python3 ../../scripts/judge.py -e ./mm_1gpu -t $(TESTCASE_PATH)
+	python3 ../../scripts/judge.py -e ./mm_1gpu -t $(TESTCASE_PATH) -gpu 1
