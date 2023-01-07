@@ -89,11 +89,11 @@ void calculate_rank_rows(int* info, int m, int size, int rank){
 	int remainder = m % size;
 	int start;
 	if (rank < remainder){   // will have one more data
-		rank_rows += 1;
-		start = rank_rows * rank;
-	} 
-    else
-		start = rank_rows * rank + remainder;
+	    rank_rows += 1;
+	    start = rank_rows * rank;
+	}
+	else
+	    start = rank_rows * rank + remainder;
 	info[0] = rank_rows;
 	info[1] = start;
 }
