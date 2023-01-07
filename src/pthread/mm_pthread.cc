@@ -11,6 +11,15 @@ int *a, *b, *c;
 pthread_mutex_t mutex;
 int row_num = 0;
 
+void dump_time(double io_t, double mul_t, double total_t) {
+    FILE *f = fopen("time.txt", "w");
+    assert(f);
+    fprintf(f, "%f\n", io_t);
+    fprintf(f, "%f\n", mul_t);
+    fprintf(f, "%f\n", total_t);
+    fclose(f);
+}
+
 void multiply_naive(int row){
     for (int j = 0; j < l; j++) {
         int sum = 0;
@@ -154,11 +163,12 @@ int main(int argc, char *argv[]) {
 
     // Timer end
     clock_gettime(CLOCK_MONOTONIC, &prog_end);
-    double total_time = cal_time(prog_start, prog_end);
-    double cpu_time = cal_time(cpu_start, cpu_end);
-    printf("Total time: %f seconds\n", total_time);
-    printf("CPU time: %f seconds\n", cpu_time);
-    printf("IO time: %f seconds\n", total_time - cpu_time);
+    double total_t = cal_time(prog_start, prog_end);
+    double mul_t = cal_time(cpu_start, cpu_end);
+    printf("Total time: %f seconds\n", total_t);
+    printf("CPU time: %f seconds\n", mul_t);
+    printf("IO time: %f seconds\n", total_t - mul_t);
+    dump_time(total_t - mul_t, mul_t, total_t);
 
     return 0;
 }

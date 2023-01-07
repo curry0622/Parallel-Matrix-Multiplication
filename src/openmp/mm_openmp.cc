@@ -6,6 +6,15 @@
 #include <smmintrin.h>
 #include <pmmintrin.h>
 
+void dump_time(double io_t, double mul_t, double total_t) {
+    FILE *f = fopen("time.txt", "w");
+    assert(f);
+    fprintf(f, "%f\n", io_t);
+    fprintf(f, "%f\n", mul_t);
+    fprintf(f, "%f\n", total_t);
+    fclose(f);
+}
+
 void multiply_naive(int *a, int *b, int *c, int m, int n, int l) {
     # pragma omp parallel for schedule(dynamic, 1)
     for (int i = 0; i < m; i++) {
@@ -89,8 +98,8 @@ void multiply_cache_friendly_sse_v2(int *a, int *b, int *c, int m, int n, int l)
 
 int main(int argc, char *argv[]) {
     // Timer start
-    double prog_t, cpu_t;
-    prog_t = omp_get_wtime();
+    double total_t, mul_t;
+    total_t = omp_get_wtime();
 
     // Read inputs
     assert(argc == 3);
@@ -110,9 +119,9 @@ int main(int argc, char *argv[]) {
     fclose(f);
 
     // Multiply a and b
-    cpu_t = omp_get_wtime();
+    mul_t = omp_get_wtime();
     multiply_cache_friendly_sse_v2(a, b, c, m, n, l);
-    cpu_t = omp_get_wtime() - cpu_t;
+    mul_t = omp_get_wtime() - mul_t;
     
     // Output c to file
     f = fopen(argv[2], "w");
@@ -125,10 +134,11 @@ int main(int argc, char *argv[]) {
     fclose(f);
 
     // Timer end
-    prog_t = omp_get_wtime() - prog_t;
-    printf("Total time: %f seconds\n", prog_t);
-    printf("CPU time: %f seconds\n", cpu_t);
-    printf("IO time: %f seconds\n", prog_t - cpu_t);
+    total_t = omp_get_wtime() - total_t;
+    printf("Total time: %f seconds\n", total_t);
+    printf("CPU time: %f seconds\n", mul_t);
+    printf("IO time: %f seconds\n", total_t - mul_t);
+    dump_time(total_t - mul_t, mul_t, total_t);
 
     return 0;
 }

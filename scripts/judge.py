@@ -26,12 +26,11 @@ if __name__ == "__main__":
     
     # Write header to result.csv
     file = open("result.csv", "w")
-    file.write("testcase,-N,-n,-c,runtime,correct\n")
+    file.write("testcase,-N,-n,-c,io_t,mul_t,total_t,correct\n")
 
     # Run testcases
     for test in testcases:
         colored_text(f"Testcase: {test}", "yellow")
-        start = time.time()
         if(args.gpu == 0):
             subprocess.run(
                 [f"srun -N{args.N} -n{args.n} -c{args.c} {args.e} {args.t}/{test} tmp.out"],
@@ -46,11 +45,17 @@ if __name__ == "__main__":
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL
             )
-        runtime = time.time() - start
-        colored_text(f"Runtime: {runtime:.3f} seconds", "white")
+        # Read time profile from time.txt
+        time_prof = open("time.txt", "r")
+        io_t = float(time_prof.readline())
+        mul_t = float(time_prof.readline())
+        total_t = float(time_prof.readline())
+        colored_text(f"io: {io_t} sec", "white")
+        colored_text(f"mul: {mul_t} sec", "white")
+        colored_text(f"total: {total_t} sec", "white")
         correct = cmp_files(f"{args.t}/{test[:-3]}.out", "tmp.out")
         print()
-        file.write(f"{test},{args.N},{args.n},{args.c},{runtime:.3f},{correct}\n")
+        file.write(f"{test},{args.N},{args.n},{args.c},{io_t:.3f},{mul_t:.3f},{total_t:.3f},{correct}\n")
     
     file.close()
     subprocess.run(["rm -rf tmp.out"], shell=True)

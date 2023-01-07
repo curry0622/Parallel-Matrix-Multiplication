@@ -5,6 +5,15 @@
 #include <smmintrin.h>
 #include <pmmintrin.h>
 
+void dump_time(double io_t, double mul_t, double total_t) {
+    FILE *f = fopen("time.txt", "w");
+    assert(f);
+    fprintf(f, "%f\n", io_t);
+    fprintf(f, "%f\n", mul_t);
+    fprintf(f, "%f\n", total_t);
+    fclose(f);
+}
+
 void multiply_naive(int *a, int *b, int *c, int m, int n, int l) {
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < l; j++) {
@@ -84,8 +93,8 @@ void multiply_cache_friendly_sse_v2(int *a, int *b, int *c, int m, int n, int l)
 
 int main(int argc, char *argv[]) {
     // Timer start
-    clock_t prog_t, cpu_t;
-    prog_t = clock();
+    clock_t total_t, mul_t;
+    total_t = clock();
 
     // Read inputs
     assert(argc == 3);
@@ -105,9 +114,9 @@ int main(int argc, char *argv[]) {
     fclose(f);
 
     // multiply a and b
-    cpu_t = clock();
+    mul_t = clock();
     multiply_cache_friendly_sse_v2(a, b, c, m, n, l);
-    cpu_t = clock() - cpu_t;
+    mul_t = clock() - mul_t;
     
     // Output c to file
     f = fopen(argv[2], "w");
@@ -120,10 +129,15 @@ int main(int argc, char *argv[]) {
     fclose(f);
 
     // Timer end
-    prog_t = clock() - prog_t;
-    printf("Total time: %f seconds\n", (double)prog_t / CLOCKS_PER_SEC);
-    printf("CPU time: %f seconds\n", (double)cpu_t / CLOCKS_PER_SEC);
-    printf("IO time: %f seconds\n", (double)(prog_t - cpu_t) / CLOCKS_PER_SEC);
+    total_t = clock() - total_t;
+    printf("Total time: %f seconds\n", (double)total_t / CLOCKS_PER_SEC);
+    printf("CPU time: %f seconds\n", (double)mul_t / CLOCKS_PER_SEC);
+    printf("IO time: %f seconds\n", (double)(total_t - mul_t) / CLOCKS_PER_SEC);
+    dump_time(
+        (double)(total_t - mul_t) / CLOCKS_PER_SEC,
+        (double)mul_t / CLOCKS_PER_SEC,
+        (double)total_t / CLOCKS_PER_SEC
+    );
 
     return 0;
 }
