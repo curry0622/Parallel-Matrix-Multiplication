@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     // Timer start
-    double total_t, mul_t;
+    double total_t, mul_t, comm_t;
     total_t = MPI_Wtime();
 
     // Read inputs
@@ -156,13 +156,16 @@ int main(int argc, char *argv[]) {
         multiply_sse_v2(i, start);
 
     if(my_rank == root_rank){
+        mul_t = MPI_Wtime() - mul_t;
         c = new int[m * l];
         assert(c);
         int counts[size]; // Define the receive counts
         int displacements[size];  // Define the displacements
         calculate_gatherv(m, size, counts, displacements);
+
+        comm_t = MPI_Wtime();
         MPI_Gatherv(c_part, rank_rows * l, MPI_INT, c, counts, displacements, MPI_INT, root_rank, MPI_COMM_WORLD);
-        mul_t = MPI_Wtime() - mul_t;
+        comm_t = MPI_Wtime() - comm_t;
 
         // Output c to file
         f = fopen(argv[2], "w");
@@ -175,8 +178,10 @@ int main(int argc, char *argv[]) {
         fclose(f);
     }
     else{
-        MPI_Gatherv(c_part, rank_rows * l, MPI_INT, NULL, NULL, NULL, MPI_INT, root_rank, MPI_COMM_WORLD);
         mul_t = MPI_Wtime() - mul_t;
+        comm_t = MPI_Wtime();
+        MPI_Gatherv(c_part, rank_rows * l, MPI_INT, NULL, NULL, NULL, MPI_INT, root_rank, MPI_COMM_WORLD);
+        comm_t = MPI_Wtime() - comm_t;
     }
 
     if (my_rank == root_rank){
@@ -184,7 +189,8 @@ int main(int argc, char *argv[]) {
         total_t = MPI_Wtime() - total_t;
         printf("Total time: %f seconds\n", total_t);
         printf("CPU time: %f seconds\n", mul_t);
-        printf("IO time: %f seconds\n", total_t - mul_t);
+        printf("Communication time: %f seconds\n", comm_t);
+        printf("IO time: %f seconds\n", total_t - mul_t - comm_t);
         dump_time(total_t - mul_t, mul_t, total_t);
     }
     MPI_Finalize();
