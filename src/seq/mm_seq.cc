@@ -209,7 +209,7 @@ int main(int argc, char *argv[]) {
 
     // Read inputs
     assert(argc == 3);
-    input_v2(argv[1]);
+    input_v3(argv[1]);
 
     // multiply a and b
     cpu_t = clock();
