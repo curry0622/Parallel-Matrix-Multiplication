@@ -142,15 +142,9 @@ int main(int argc, char *argv[]) {
     int rank_rows = my_info[0];
     int start = my_info[1];
 
-    c_part = new int[rank_rows * l];
-    assert(c_part);
-    for (int i=0; i<rank_rows*l; i++)
-        c_part[i] = 0;
-
-    for (int i=start; i<start+rank_rows; i++) {
+    c_part = new int[rank_rows * l]();
+    for (int i=start; i<start+rank_rows; i++)
         multiply_sse_v2(i, start);
-    }
-
 
     if(my_rank == root_rank){
         c = new int[m * l];
