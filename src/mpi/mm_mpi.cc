@@ -10,6 +10,15 @@
 int m, n, l;
 int *a, *b, *c_part, *c;
 
+void dump_time(double io_t, double mul_t, double total_t) {
+    FILE *f = fopen("time.txt", "w");
+    assert(f);
+    fprintf(f, "%f\n", io_t);
+    fprintf(f, "%f\n", mul_t);
+    fprintf(f, "%f\n", total_t);
+    fclose(f);
+}
+
 void multiply_naive(int row, int start){
     int new_row = row - start;
     for (int j = 0; j < l; j++) {
@@ -117,8 +126,8 @@ int main(int argc, char *argv[]) {
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     // Timer start
-    double prog_t, cpu_t;
-    prog_t = MPI_Wtime();
+    double total_t, mul_t;
+    total_t = MPI_Wtime();
 
     // Read inputs
     assert(argc == 3);
@@ -136,7 +145,7 @@ int main(int argc, char *argv[]) {
     fclose(f);
 
     // allocate memory for c_part
-    cpu_t = MPI_Wtime();
+    mul_t = MPI_Wtime();
     int my_info[2];  // rank_rows, start
     calculate_rank_rows(my_info, m, size, my_rank);
     int rank_rows = my_info[0];
@@ -153,7 +162,7 @@ int main(int argc, char *argv[]) {
         int displacements[size];  // Define the displacements
         calculate_gatherv(m, size, counts, displacements);
         MPI_Gatherv(c_part, rank_rows * l, MPI_INT, c, counts, displacements, MPI_INT, root_rank, MPI_COMM_WORLD);
-        cpu_t = MPI_Wtime() - cpu_t;
+        mul_t = MPI_Wtime() - mul_t;
 
         // Output c to file
         f = fopen(argv[2], "w");
@@ -167,15 +176,16 @@ int main(int argc, char *argv[]) {
     }
     else{
         MPI_Gatherv(c_part, rank_rows * l, MPI_INT, NULL, NULL, NULL, MPI_INT, root_rank, MPI_COMM_WORLD);
-        cpu_t = MPI_Wtime() - cpu_t;
+        mul_t = MPI_Wtime() - mul_t;
     }
 
     if (my_rank == root_rank){
         // Timer end
-        prog_t = MPI_Wtime() - prog_t;
-        printf("Total time: %f seconds\n", prog_t);
-        printf("CPU time: %f seconds\n", cpu_t);
-        printf("IO time: %f seconds\n", prog_t - cpu_t);
+        total_t = MPI_Wtime() - total_t;
+        printf("Total time: %f seconds\n", total_t);
+        printf("CPU time: %f seconds\n", mul_t);
+        printf("IO time: %f seconds\n", total_t - mul_t);
+        dump_time(total_t - mul_t, mul_t, total_t);
     }
     MPI_Finalize();
 }

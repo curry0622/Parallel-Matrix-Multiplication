@@ -50,6 +50,15 @@ void output(char *filename) {
     fclose(f);
 }
 
+void dump_time(double io_t, double mul_t, double total_t) {
+    FILE *f = fopen("time.txt", "w");
+    assert(f);
+    fprintf(f, "%f\n", io_t);
+    fprintf(f, "%f\n", mul_t);
+    fprintf(f, "%f\n", total_t);
+    fclose(f);
+}
+
 __global__ void multiply_naive(int *d_a, int *d_b, int *d_c, int m, int n, int l) {
     int row_idx = blockIdx.y * blockDim.y + threadIdx.y;
     int col_idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -62,8 +71,8 @@ __global__ void multiply_naive(int *d_a, int *d_b, int *d_c, int m, int n, int l
 
 int main(int argc, char *argv[]) {
     // Timer start
-    clock_t prog_t, input_t, output_t;
-    prog_t = clock();
+    clock_t total_t, input_t, output_t;
+    total_t = clock();
 
     // Argument check
     assert(argc == 3);
@@ -97,10 +106,15 @@ int main(int argc, char *argv[]) {
     output_t = clock() - output_t;
 
     // Print time
-    prog_t = clock() - prog_t;
-    printf("Time: %f\n", (double)prog_t / CLOCKS_PER_SEC);
+    total_t = clock() - total_t;
+    printf("Time: %f\n", (double)total_t / CLOCKS_PER_SEC);
     printf("IO time: %f\n", (double)(input_t + output_t) / CLOCKS_PER_SEC);
-    printf("GPU time: %f\n", (double)(prog_t - input_t - output_t) / CLOCKS_PER_SEC);
+    printf("GPU time: %f\n", (double)(total_t - input_t - output_t) / CLOCKS_PER_SEC);
+    dump_time(
+        (double)input_t / CLOCKS_PER_SEC,
+        (double)(total_t - input_t - output_t) / CLOCKS_PER_SEC,
+        (double)total_t / CLOCKS_PER_SEC
+    );
 
     return 0;
 }
