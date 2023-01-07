@@ -1,6 +1,6 @@
 # Result
 
-## Runtime of using 1 node, 12 processors
+## Runtime of using 1 node, 12 processes
 
 | Testcase     | -N | -n | -c | runtime |
 |--------------|----|----|----|---------|
@@ -15,7 +15,7 @@
 | 81000000.in  | 1  | 12 | 1  | 110.337 |
 | 100000000.in | 1  | 12 | 1  | 146.143 |
 
-## Runtime of using 2 node, 24 processors
+## Runtime of using 2 node, 24 processes
 
 | Testcase     | -N | -n | -c | runtime |
 |--------------|----|----|----|---------|
@@ -30,7 +30,7 @@
 | 81000000.in  | 2  | 24 | 1  | 68.972  |
 | 100000000.in | 2  | 24 | 1  | 90.344  |
 
-## Runtime of using 3 nodes, 36 processors
+## Runtime of using 3 nodes, 36 processes
 
 | Testcase     | -N | -n | -c | runtime |
 |--------------|----|----|----|---------|
@@ -45,7 +45,7 @@
 | 81000000.in  | 3  | 36 | 1  | 55.278  |
 | 100000000.in | 3  | 36 | 1  | 71.697  |
 
-## Runtime of using 4 nodes, 48 processors
+## Runtime of using 4 nodes, 48 processes
 
 | Testcase     | -N | -n | -c | runtime |
 |--------------|----|----|----|---------|
