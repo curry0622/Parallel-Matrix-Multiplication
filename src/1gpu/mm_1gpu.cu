@@ -7,6 +7,15 @@
 int *a, *b, *c;
 int m, n, l;
 
+void dump_time(double io_t, double mul_t, double total_t) {
+    FILE *f = fopen("time.txt", "w");
+    assert(f);
+    fprintf(f, "%.3f\n", io_t);
+    fprintf(f, "%.3f\n", mul_t);
+    fprintf(f, "%.3f\n", total_t);
+    fclose(f);
+}
+
 void input(char *filename) {
     // Open file
     FILE *f = fopen(filename, "r");
@@ -47,15 +56,6 @@ void output(char *filename) {
     }
 
     // Close file
-    fclose(f);
-}
-
-void dump_time(double io_t, double mul_t, double total_t) {
-    FILE *f = fopen("time.txt", "w");
-    assert(f);
-    fprintf(f, "%f\n", io_t);
-    fprintf(f, "%f\n", mul_t);
-    fprintf(f, "%f\n", total_t);
     fclose(f);
 }
 
@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
     printf("IO time: %f\n", (double)(input_t + output_t) / CLOCKS_PER_SEC);
     printf("GPU time: %f\n", (double)(total_t - input_t - output_t) / CLOCKS_PER_SEC);
     dump_time(
-        (double)input_t / CLOCKS_PER_SEC,
+        (double)(input_t + output_t) / CLOCKS_PER_SEC,
         (double)(total_t - input_t - output_t) / CLOCKS_PER_SEC,
         (double)total_t / CLOCKS_PER_SEC
     );

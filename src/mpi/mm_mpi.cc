@@ -13,9 +13,9 @@ int *a, *b, *c_part, *c;
 void dump_time(double io_t, double mul_t, double total_t) {
     FILE *f = fopen("time.txt", "w");
     assert(f);
-    fprintf(f, "%f\n", io_t);
-    fprintf(f, "%f\n", mul_t);
-    fprintf(f, "%f\n", total_t);
+    fprintf(f, "%.3f\n", io_t);
+    fprintf(f, "%.3f\n", mul_t);
+    fprintf(f, "%.3f\n", total_t);
     fclose(f);
 }
 
